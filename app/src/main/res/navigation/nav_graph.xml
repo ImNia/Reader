@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/sourcesList">
+
+    <fragment
+        android:id="@+id/sourcesList"
+        android:name="com.delirium.reader.SourcesList"
+        android:label="sources_list"
+        tools:layout="@layout/sources_list">
+        <action
+            android:id="@+id/action_sourcesList_to_newsList"
+            app:destination="@id/newsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsList"
+        android:name="com.delirium.reader.NewsList"
+        android:label="news_list"
+        tools:layout="@layout/news_list" >
+        <action
+            android:id="@+id/action_newsList_to_newsReading"
+            app:destination="@id/newsReading" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsReading"
+        android:name="com.delirium.reader.NewsReading"
+        android:label="news_reading"
+        tools:layout="@layout/news_reading" />
+</navigation>
