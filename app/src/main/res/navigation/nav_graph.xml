@@ -22,6 +22,10 @@
         <action
             android:id="@+id/action_newsList_to_newsReading"
             app:destination="@id/newsReading" />
+        <argument
+            android:name="news"
+            app:argType="string"
+            android:defaultValue="Nothing" />
     </fragment>
     <fragment
         android:id="@+id/newsReading"

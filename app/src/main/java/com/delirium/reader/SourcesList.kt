@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.delirium.reader.databinding.SourcesListBinding
+import com.delirium.reader.databinding.SourcesListBindingImpl
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,8 +28,12 @@ class SourcesList : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private var animalList : List<String> = listOf("Horse", "Cat", "Dog", "Cow")
-    private var adapter: SourceAdapter = SourceAdapter(animalList)
+    private var animalList : List<Source> = listOf(
+        Source("Horse"),
+        Source("Cat"),
+        Source("Dog"),
+        Source("Cow"))
+    private lateinit var adapter: SourceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +41,23 @@ class SourcesList : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        Log.i("SOURCES_FRAGMENT", "Create fragment")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i("SOURCES_FRAGMENT", "Create View Fragment")
         val binding = DataBindingUtil.inflate<SourcesListBinding>(inflater,
             R.layout.sources_list, container, false)
 
+        adapter = SourceAdapter(animalList, SourceListener { name ->
+            Log.i("CLICK", "Click: $name")
+            val bundle = bundleOf("name" to name)
+            binding.root.findNavController().navigate(
+//                SourcesListDirections.actionSourcesListToNewsList(name)
+                R.id.action_sourcesList_to_newsList, bundle
+            )
+        })
         val manager = GridLayoutManager(activity, 3)
         binding.recycler.layoutManager = manager
         binding.recycler.setHasFixedSize(true)
