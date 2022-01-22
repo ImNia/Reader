@@ -44,8 +44,8 @@ class SourceAdapter(private val dataSet: List<Source>, private val clickListener
     }
 }
 
-class SourceListener(val clickListener: (name: String) -> Unit) {
-    fun onClick(item: String = "Something") {
+class SourceListener(val clickListener: (name: Source) -> Unit) {
+    fun onClick(item: Source) {
         clickListener(item)
     }
 }

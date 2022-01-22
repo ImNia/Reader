@@ -14,7 +14,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="73dp"
-        android:onClick="@{() -> clickListener.onClick(source.name)}"
+        android:onClick="@{() -> clickListener.onClick(source)}"
         >
 
         <TextView
