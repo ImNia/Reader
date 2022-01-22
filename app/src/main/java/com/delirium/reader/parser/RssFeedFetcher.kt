@@ -1,5 +1,6 @@
 package com.delirium.reader.parser
 
+import android.util.Log
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -20,6 +21,7 @@ class RssFeedFetcher {
             newsFeeds = parser.parse(stream!!)
         }
 
+        Log.i("RSS_FEED_FETCHER", "In function: ${newsFeeds!!.size}")
         return newsFeeds
     }
 }

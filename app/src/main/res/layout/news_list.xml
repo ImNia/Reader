@@ -3,26 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     >
-    <data>
-        <variable
-            name="news"
-            type="String" />
-    </data>
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".NewsList">
+        tools:context=".NewsList"
+        >
 
-        <TextView
-            android:id="@+id/title_news"
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@{news}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="italic"
-            tools:text="Somebody" />
+            android:id="@+id/recyclerNewsList"
+            />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

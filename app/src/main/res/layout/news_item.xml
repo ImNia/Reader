@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+        <variable
+            name="news"
+            type="com.delirium.reader.parser.NewsFeed" />
+        <variable
+            name="newsListener"
+            type="com.delirium.reader.NewsListener" />
+    </data>
+
+<!--    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="@{() -> newsListener.onClick(news)}"
+        tools:context=".NewsList">-->
+
+        <TextView
+            android:id="@+id/title_news"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:text="@{news.title}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:onClick="@{() -> newsListener.onClick(news)}"
+            tools:text="Somebody" />
+<!--
+    </LinearLayout>-->
+</layout>
