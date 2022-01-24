@@ -17,7 +17,7 @@ class SourcesList : Fragment() {
     //TODO Must be stored in other place
     private var animalList : List<Source> = listOf(
         Source("Lenta", "https://lenta.ru/rss/news"),
-        Source("Meduza", "https://meduza.io/rss2"),
+        Source("Meduza", "https://meduza.io/rss/all"),
         Source("Habr", "https://habr.com/ru/rss"),
         Source("Phoronix", "https://www.phoronix.com/rss.php"))
 

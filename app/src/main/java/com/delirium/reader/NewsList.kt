@@ -44,6 +44,7 @@ class NewsList : Fragment() {
         newsAdapter = NewsAdapter(newsTitle, NewsListener { news ->
             val bundle = bundleOf("title" to news.title)
             bundle.putString("description", news.description)
+            bundle.putString("link", news.link)
 
             binding.root.findNavController().navigate(
                 R.id.action_newsList_to_newsReading, bundle
