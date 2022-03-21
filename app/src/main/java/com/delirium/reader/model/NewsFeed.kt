@@ -1,4 +1,4 @@
-package com.delirium.reader.parser
+package com.delirium.reader.model
 
 data class NewsFeed(
     var title: String? = null,

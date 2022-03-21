@@ -5,5 +5,5 @@
     android:id="@+id/newsWebView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewsReading"
+    tools:context=".news.NewsReading"
     />

@@ -3,33 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/sourcesList">
+    app:startDestination="@id/sourceList">
 
     <fragment
-        android:id="@+id/sourcesList"
-        android:name="com.delirium.reader.SourcesList"
+        android:id="@+id/sourceList"
+        android:name="com.delirium.reader.sources.SourceList"
         android:label="sources_list"
         tools:layout="@layout/sources_list">
         <action
-            android:id="@+id/action_sourcesList_to_newsList"
+            android:id="@+id/action_sourceList_to_newsList"
             app:destination="@id/newsList" />
     </fragment>
     <fragment
         android:id="@+id/newsList"
-        android:name="com.delirium.reader.NewsList"
+        android:name="com.delirium.reader.news.NewsList"
         android:label="news_list"
         tools:layout="@layout/news_list" >
+        <argument
+            android:name="source"
+            app:argType="com.delirium.reader.sources.Source" />
         <action
             android:id="@+id/action_newsList_to_newsReading"
             app:destination="@id/newsReading" />
-        <argument
-            android:name="news"
-            app:argType="string"
-            android:defaultValue="Nothing" />
     </fragment>
     <fragment
         android:id="@+id/newsReading"
-        android:name="com.delirium.reader.NewsReading"
+        android:name="com.delirium.reader.news.NewsReading"
         android:label="news_reading"
-        tools:layout="@layout/news_reading" />
+        tools:layout="@layout/news_reading">
+        <argument
+            android:name="newsLink"
+            app:argType="string" />
+    </fragment>
 </navigation>

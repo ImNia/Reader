@@ -1,4 +1,4 @@
-package com.delirium.reader
+package com.delirium.reader.news
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.navigation.fragment.navArgs
+import com.delirium.reader.R
 
 class NewsReading : Fragment() {
+    private val args by navArgs<NewsReadingArgs>()
+    private val linkNews by lazy { args.newsLink }
     private lateinit var webView: WebView
 
     override fun onCreateView(
@@ -21,9 +25,8 @@ class NewsReading : Fragment() {
         webView.webViewClient = NewsWebViewClient()
         webView.settings.javaScriptEnabled
 
-        arguments?.getString("link")?.let{
-            webView.loadUrl(it)
-        }
+        webView.loadUrl(linkNews)
+
         return rootView
     }
 }

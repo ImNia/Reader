@@ -1,4 +1,4 @@
-package com.delirium.reader
+package com.delirium.reader.news
 
 import android.annotation.TargetApi
 import android.os.Build

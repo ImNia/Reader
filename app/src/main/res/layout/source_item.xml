@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="73dp"
     >
-    <data>
-        <variable
-            name="source"
-            type="com.delirium.reader.Source" />
-        <variable
-            name="clickListener"
-            type="com.delirium.reader.SourceListener" />
-    </data>
-
-    <FrameLayout
+    <TextView
+        android:id="@+id/nameSource"
         android:layout_width="match_parent"
-        android:layout_height="73dp"
-        android:onClick="@{() -> clickListener.onClick(source)}"
-        >
+        android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/nameSource"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@{source.name}" />
-
-    </FrameLayout>
-</layout>
+</FrameLayout>
