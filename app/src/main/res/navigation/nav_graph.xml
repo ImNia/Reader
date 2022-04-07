@@ -23,4 +23,10 @@
             android:name="newsLink"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.delirium.reader.favorite.FavoriteFragment"
+        android:label="@string/favorite"
+        tools:layout="@layout/fragment_favorite">
+    </fragment>
 </navigation>

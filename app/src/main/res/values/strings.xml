@@ -2,4 +2,7 @@
     <string name="app_name">Reader</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Name source</string>
+    <string name="favorite">Избранное</string>
+    <string name="not_news_favorite">Перейти к новостям</string>
+    <string name="go_to_news_list">Пока нет новостей</string>
 </resources>
