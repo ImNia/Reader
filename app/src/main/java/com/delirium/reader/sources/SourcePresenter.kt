@@ -8,9 +8,9 @@ class SourcePresenter : ViewModel() {
 
     //TODO Must be stored in other place
     private var sourceList : List<Source> = listOf(
-        Source("Lenta", "https://lenta.ru/rss/news"),
-        Source("Meduza", "https://meduza.io/rss/all"),
-        Source("Habr", "https://habr.com/ru/rss"),
+        Source("Lenta", "https://lenta.ru/rss/news/"),
+//        Source("Meduza", "https://meduza.io/rss/all/"),
+        Source("Habr", "https://habr.com/ru/rss/"),
         Source("Phoronix", "https://www.phoronix.com/rss.php")
     )
 

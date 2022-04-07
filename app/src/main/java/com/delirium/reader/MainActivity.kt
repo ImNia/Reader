@@ -8,12 +8,14 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.delirium.reader.databinding.ActivityMainBinding
+import io.realm.Realm
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initDatabase()
 
         val bindingMain = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingMain.root)
@@ -24,6 +26,11 @@ class MainActivity : AppCompatActivity() {
                 as NavHostFragment
         val navController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController)
+    }
+
+    private fun initDatabase() {
+        Realm.init(this)
+        Realm.setDefaultConfiguration(RealmConfiguration().getConfigDB())
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -23,11 +23,20 @@ class NewsAdapter(private val clickListener: NewsListener)
             binding.titleNews.isClickable
             binding.titleNews.setOnClickListener(this)
 
+            binding.source.text = word.source
+                ?.substringAfter("//")
+                ?.substringBefore("/")
+
+            binding.releaseDate.text = word.releaseDate
             clickNews = clickListener
         }
 
         override fun onClick(p0: View?) {
-            clickNews.onClickNewsTitle((p0 as AppCompatTextView).text as String)
+//            clickNews.onClickNewsTitle((p0 as AppCompatTextView).text as String)
+            clickNews.onClickNewsTitle(
+                (p0 as AppCompatTextView).text as String,
+                (binding.source as AppCompatTextView).text as String
+            )
         }
     }
 
@@ -39,7 +48,6 @@ class NewsAdapter(private val clickListener: NewsListener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tmp = dataSet[position]
-        Log.i("ADAPTER", "Values: $tmp")
         holder.bind(tmp, clickListener)
     }
 
@@ -49,5 +57,5 @@ class NewsAdapter(private val clickListener: NewsListener)
 }
 
 interface NewsListener {
-    fun onClickNewsTitle(title: String)
+    fun onClickNewsTitle(title: String, source: String)
 }

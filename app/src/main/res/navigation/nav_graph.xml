@@ -3,25 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/sourceList">
+    app:startDestination="@id/newsList">
 
-    <fragment
-        android:id="@+id/sourceList"
-        android:name="com.delirium.reader.sources.SourceList"
-        android:label="sources_list"
-        tools:layout="@layout/sources_list">
-        <action
-            android:id="@+id/action_sourceList_to_newsList"
-            app:destination="@id/newsList" />
-    </fragment>
     <fragment
         android:id="@+id/newsList"
         android:name="com.delirium.reader.news.NewsList"
         android:label="news_list"
         tools:layout="@layout/news_list" >
-        <argument
-            android:name="source"
-            app:argType="com.delirium.reader.sources.Source" />
         <action
             android:id="@+id/action_newsList_to_newsReading"
             app:destination="@id/newsReading" />

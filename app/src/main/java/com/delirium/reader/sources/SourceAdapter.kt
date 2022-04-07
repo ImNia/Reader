@@ -20,7 +20,6 @@ class SourceAdapter(private val clickListener: SourceListener)
         private val bindingNews: SourceItemBinding = binding
 
         fun bind(sourceNews: Source, clickListener: SourceListener) {
-            Log.i("ADAPTER", sourceNews.name)
             bindingNews.nameSource.text = sourceNews.name
             bindingNews.nameSource.isClickable
             bindingNews.nameSource.setOnClickListener(this)
@@ -41,7 +40,6 @@ class SourceAdapter(private val clickListener: SourceListener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sourceNews = dataSet[position]
-        Log.i("ADAPTER", "$sourceNews")
         holder.bind(sourceNews, clickListener)
     }
 

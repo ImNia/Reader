@@ -54,8 +54,8 @@ class SourceList : Fragment(), SourceListener {
     }
 
     fun selectedSource(nameSource: Source) {
-        bindingSource.root.findNavController().navigate(
+        /*bindingSource.root.findNavController().navigate(
             SourceListDirections.actionSourceListToNewsList(nameSource)
-        )
+        )*/
     }
 }

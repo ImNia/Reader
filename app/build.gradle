@@ -5,6 +5,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 //apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'realm-android'
 
 android {
     compileSdk 32
