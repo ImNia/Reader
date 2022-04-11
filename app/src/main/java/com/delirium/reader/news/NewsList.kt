@@ -22,8 +22,8 @@ class NewsList : Fragment(), NewsListener {
     private var sourceList : List<Source> = listOf(
         Source("Lenta", "https://lenta.ru/rss/news/"),
 //        Source("Meduza", "https://meduza.io/rss/all/"),
-        Source("Habr", "https://habr.com/ru/rss/"),
-        Source("Phoronix", "https://www.phoronix.com/rss.php/")
+//        Source("Habr", "https://habr.com/ru/rss/"),
+//        Source("Phoronix", "https://www.phoronix.com/rss.php/")
     )
 
     private var recyclerView: RecyclerView? = null
@@ -52,8 +52,8 @@ class NewsList : Fragment(), NewsListener {
         newsListPresenter.currentState()
     }
 
-    fun drawNewsList(title: List<NewsFeed>) {
-        newsAdapter.dataSet = title
+    fun drawNewsList(news: List<NewsFeed>) {
+        newsAdapter.dataSet = news
         newsAdapter.notifyDataSetChanged()
     }
 
@@ -65,5 +65,9 @@ class NewsList : Fragment(), NewsListener {
 
     override fun onClickNewsTitle(title: String, source: String) {
         newsListPresenter.selectNewsTitle(title, source)
+    }
+
+    override fun onClickFavorite(title: String, source: String) {
+        newsListPresenter.selectFavoriteNews(title, source)
     }
 }

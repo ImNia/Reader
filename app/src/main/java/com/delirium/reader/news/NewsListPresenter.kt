@@ -2,14 +2,19 @@ package com.delirium.reader.news
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.delirium.reader.CallbackModelDB
 import com.delirium.reader.CallbackNews
 import com.delirium.reader.model.Model
 import com.delirium.reader.model.NewsFeed
+import com.delirium.reader.model.CodeOperationModelDB
+import com.delirium.reader.model.ModelDB
 import com.delirium.reader.sources.Source
+import java.lang.IllegalArgumentException
 
-class NewsListPresenter : ViewModel(), CallbackNews {
+class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
     private var viewNews: NewsList? = null
     private var model = Model(this)
+    private var modelDB = ModelDB(this)
 
     private var newsList: MutableList<NewsFeed> = mutableListOf()
     private var newsFromAllResource: HashMap<String, List<NewsFeed>> = hashMapOf()
@@ -28,7 +33,24 @@ class NewsListPresenter : ViewModel(), CallbackNews {
     }
 
     fun selectNewsTitle(title: String, source: String) {
-        var selectTitle: NewsFeed? = null
+        val desiredNews = findNewsInList(title, source)
+        viewNews?.selectedNewsTitle(desiredNews)
+    }
+
+    fun selectFavoriteNews(title: String, source: String) {
+        val desiredNews = findNewsInList(title, source)
+        when (desiredNews.isFavorite) {
+            true -> modelDB.deleteNewsInFavorite(desiredNews)
+            false -> {
+                desiredNews.isFavorite = true
+                modelDB.saveNewsToFavorite(desiredNews)
+            }
+        }
+//        currentState()
+    }
+    
+    private fun findNewsInList(title: String, source: String) : NewsFeed {
+        var desiredNews: NewsFeed? = null
         var titleForSource = newsFromAllResource.get(source)
 
         for (item in newsFromAllResource) {
@@ -39,12 +61,13 @@ class NewsListPresenter : ViewModel(), CallbackNews {
 
         titleForSource?.forEach { newsFeed ->
             if(newsFeed.title == title)
-                selectTitle = newsFeed
+                desiredNews = newsFeed
         }
-        //TODO exception
-        viewNews?.selectedNewsTitle(selectTitle!!)
-    }
 
+//        Log.i("NEWS_LIST_PRESENTER", "Desire news: $desiredNews")
+        return desiredNews ?: throw IllegalArgumentException()
+    }
+    
     private fun setNewsForDraw() {
         val news: MutableList<NewsFeed> = mutableListOf()
         for (item in newsFromAllResource) {
@@ -52,16 +75,32 @@ class NewsListPresenter : ViewModel(), CallbackNews {
             news.addAll(partNews)
         }
         news.shuffle()
-        viewNews?.drawNewsList(news)
+        newsList = news
+        currentState()
     }
 
-    override fun successful(source: String, news: MutableList<NewsFeed>) {
-        newsFromAllResource.put(source, news)
+    override fun successfulNews(source: String, news: MutableList<NewsFeed>) {
+        val updateNews = modelDB.checkIsFavorite(news)
+        newsFromAllResource.put(source, updateNews)
         setNewsForDraw()
     }
 
-    override fun failed() {
+    override fun failedNews() {
         // TODO("Not yet implemented")
         Log.i("NEWS_LIST", "Not ok get data: ${model.requestData}")
+    }
+
+    override fun successfulModelDB(operationCode: CodeOperationModelDB, data: List<NewsFeed>) {
+        when (operationCode) {
+            CodeOperationModelDB.CHECK_IF_FAVORITE -> println("Contains in Favorite")
+            CodeOperationModelDB.SAVE -> {
+                Log.i("NEWS_LIST_PRESENTER", "Save news")
+                viewNews?.drawNewsList(newsList)
+            }
+        }
+    }
+
+    override fun failedModelDB() {
+        Log.i("NEWS_LIST", "Not ok in ModelDB")
     }
 }

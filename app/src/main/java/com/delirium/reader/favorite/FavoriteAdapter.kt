@@ -1,4 +1,4 @@
-package com.delirium.reader.news
+package com.delirium.reader.favorite
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,16 +10,17 @@ import com.delirium.reader.R
 import com.delirium.reader.databinding.NewsItemBinding
 import com.delirium.reader.model.NewsFeed
 
-class NewsAdapter(private val clickListener: NewsListener)
-    : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class FavoriteAdapter(
+    private val clickListener: ClickFavoriteNews
+) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
     var dataSet: List<NewsFeed> = listOf()
 
-    class ViewHolder(var binding: NewsItemBinding)
-        : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    class ViewHolder(var binding: NewsItemBinding) : RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener {
 
-        private lateinit var clickNews: NewsListener
-        fun bind(currentNews: NewsFeed, clickListener: NewsListener) {
+        private lateinit var clickNews: ClickFavoriteNews
+        fun bind(currentNews: NewsFeed, clickListener: ClickFavoriteNews) {
             binding.titleNews.text = currentNews.title
             binding.titleNews.isClickable
             binding.titleNews.setOnClickListener(this)
@@ -35,29 +36,29 @@ class NewsAdapter(private val clickListener: NewsListener)
             else binding.favoriteIndicator.setImageResource(R.drawable.ic_favorite_border_black_24dp)
             binding.favoriteIndicator.isClickable
             binding.favoriteIndicator.setOnClickListener(this)
+
             clickNews = clickListener
         }
 
         override fun onClick(p0: View?) {
-//            clickNews.onClickNewsTitle((p0 as AppCompatTextView).text as String)
             if (binding.favoriteIndicator.id == p0?.id) {
-                Log.i("ADAPTER_NEWS_LIST", "Click favorite Indicator")
                 clickNews.onClickFavorite(
-                    binding.titleNews.text as String,
-                    (binding.source as AppCompatTextView).text as String
+                    binding.titleNews.text as String
                 )
             } else {
-                clickNews.onClickNewsTitle(
-                    (p0 as AppCompatTextView).text as String,
-                    (binding.source as AppCompatTextView).text as String
+                clickNews.onClickNews(
+                    (p0 as AppCompatTextView).text as String
                 )
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = NewsItemBinding.inflate(layoutInflater, parent, false)
+        val binding = NewsItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 
@@ -66,12 +67,13 @@ class NewsAdapter(private val clickListener: NewsListener)
         holder.bind(tmp, clickListener)
     }
 
-    override fun getItemCount() : Int {
+    override fun getItemCount(): Int {
         return dataSet.size
     }
+
 }
 
-interface NewsListener {
-    fun onClickNewsTitle(title: String, source: String)
-    fun onClickFavorite(title: String, source: String)
+interface ClickFavoriteNews {
+    fun onClickNews(name: String)
+    fun onClickFavorite(name: String)
 }

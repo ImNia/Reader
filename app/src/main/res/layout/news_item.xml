@@ -11,6 +11,16 @@
     android:background="@drawable/rounder_corner_element"
     >
 
+    <ImageView
+        android:id="@+id/favorite_indicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/content_description_favorite"
+        android:paddingTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/teal_200" />
+
     <TextView
         android:id="@+id/title_news"
         android:layout_width="match_parent"

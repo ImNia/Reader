@@ -1,9 +1,6 @@
 package com.delirium.reader.model
 
-import android.util.Log
 import com.delirium.reader.CallbackNews
-import com.delirium.reader.RealmConfiguration
-import io.realm.Realm
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
@@ -13,17 +10,13 @@ import retrofit2.Response
 
 class Model(val callback: CallbackNews) {
     private lateinit var newsRequest: NewsRequest
-    private val configDB: RealmConfiguration = RealmConfiguration()
-
-    private val realmDB: Realm = Realm.getInstance(configDB.getConfigDB())
-
     var requestData: MutableList<NewsFeed> = mutableListOf()
 
     fun getData(urlNews: String) {
         newsRequest = SettingConnect.getNewsRequest(urlNews)
         newsRequest.newsFeed().enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
-                callback.failed()
+                callback.failedNews()
                 t.printStackTrace()
             }
 
@@ -33,9 +26,9 @@ class Model(val callback: CallbackNews) {
             ) {
                 if (response.isSuccessful) {
                     requestData = parseReceiveNews(response.body(), urlNews)
-                    callback.successful(urlNews, requestData)
+                    callback.successfulNews(urlNews, requestData)
                 } else {
-                    callback.failed()
+                    callback.failedNews()
                 }
             }
         })
@@ -49,6 +42,7 @@ class Model(val callback: CallbackNews) {
             val newsFeed = NewsFeed()
             for (childNode in item.childNodes()) {
                 when(childNode.nodeName()) {
+                    "guid" -> newsFeed.guid = (childNode as Element).text()
                     "title" -> newsFeed.title = (childNode as Element).text()
                     "link" -> newsFeed.link =
                         (item.childNode(childNode.siblingIndex() + 1) as TextNode).wholeText

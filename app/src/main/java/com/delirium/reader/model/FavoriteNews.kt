@@ -1,6 +1,8 @@
 package com.delirium.reader.model
 
-data class NewsFeed(
+import io.realm.RealmObject
+
+open class FavoriteNews(
     var guid: String? = null,
     var title: String? = null,
     var link: String? = null,
@@ -8,4 +10,4 @@ data class NewsFeed(
     var description: String? = null,
     var releaseDate: String? = null,
     var isFavorite: Boolean = false
-)
+) : RealmObject()
