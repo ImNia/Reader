@@ -8,25 +8,34 @@
     <fragment
         android:id="@+id/newsList"
         android:name="com.delirium.reader.news.NewsList"
-        android:label="news_list"
+        android:label="@string/news_list_label"
         tools:layout="@layout/news_list" >
         <action
             android:id="@+id/action_newsList_to_newsReading"
             app:destination="@id/newsReading" />
     </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.delirium.reader.favorite.FavoriteFragment"
+        android:label="@string/favorite_label"
+        tools:layout="@layout/fragment_favorite">
+        <action
+            android:id="@+id/action_favoriteFragment_to_newsReading"
+            app:destination="@id/newsReading" />
+    </fragment>
+
     <fragment
         android:id="@+id/newsReading"
         android:name="com.delirium.reader.news.NewsReading"
-        android:label="news_reading"
+        android:label="{newsReaderLabel}"
         tools:layout="@layout/news_reading">
         <argument
             android:name="newsLink"
             app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/favoriteFragment"
-        android:name="com.delirium.reader.favorite.FavoriteFragment"
-        android:label="@string/favorite"
-        tools:layout="@layout/fragment_favorite">
+        <argument
+            android:name="newsReaderLabel"
+            app:argType="string"
+            />
     </fragment>
 </navigation>

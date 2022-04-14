@@ -21,15 +21,14 @@ class NewsAdapter(private val clickListener: NewsListener)
         private lateinit var clickNews: NewsListener
         fun bind(currentNews: NewsFeed, clickListener: NewsListener) {
             binding.titleNews.text = currentNews.title
-            binding.titleNews.isClickable
-            binding.titleNews.setOnClickListener(this)
+            binding.newsItemCard.isClickable
+            binding.newsItemCard.setOnClickListener(this)
 
             binding.source.text = currentNews.source
                 ?.substringAfter("//")
                 ?.substringBefore("/")
 
             binding.releaseDate.text = currentNews.releaseDate
-
             if (currentNews.isFavorite)
                 binding.favoriteIndicator.setImageResource(R.drawable.ic_favorite_black_24dp)
             else binding.favoriteIndicator.setImageResource(R.drawable.ic_favorite_border_black_24dp)
@@ -39,17 +38,15 @@ class NewsAdapter(private val clickListener: NewsListener)
         }
 
         override fun onClick(p0: View?) {
-//            clickNews.onClickNewsTitle((p0 as AppCompatTextView).text as String)
             if (binding.favoriteIndicator.id == p0?.id) {
-                Log.i("ADAPTER_NEWS_LIST", "Click favorite Indicator")
                 clickNews.onClickFavorite(
                     binding.titleNews.text as String,
-                    (binding.source as AppCompatTextView).text as String
+                    binding.source.text as String
                 )
             } else {
                 clickNews.onClickNewsTitle(
-                    (p0 as AppCompatTextView).text as String,
-                    (binding.source as AppCompatTextView).text as String
+                    binding.titleNews.text as String,
+                    binding.source.text as String
                 )
             }
         }

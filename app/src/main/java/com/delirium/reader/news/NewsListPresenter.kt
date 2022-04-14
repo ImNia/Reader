@@ -10,6 +10,8 @@ import com.delirium.reader.model.CodeOperationModelDB
 import com.delirium.reader.model.ModelDB
 import com.delirium.reader.sources.Source
 import java.lang.IllegalArgumentException
+import java.util.*
+import kotlin.collections.HashMap
 
 class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
     private var viewNews: NewsList? = null
@@ -18,13 +20,13 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
 
     private var newsList: MutableList<NewsFeed> = mutableListOf()
     private var newsFromAllResource: HashMap<String, List<NewsFeed>> = hashMapOf()
-//    private var sourceName: String? = null
 
     fun attachViewAndInit(viewNews: NewsList, sources: List<Source>) {
         this.viewNews = viewNews
-        newsList.clear()
-        for (source in sources) {
-            model.getData(source.link)
+        if (newsList.isEmpty()) {
+            for (source in sources) {
+                model.getData(source.link)
+            }
         }
     }
 
@@ -46,7 +48,6 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
                 modelDB.saveNewsToFavorite(desiredNews)
             }
         }
-//        currentState()
     }
     
     private fun findNewsInList(title: String, source: String) : NewsFeed {
@@ -64,7 +65,6 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
                 desiredNews = newsFeed
         }
 
-//        Log.i("NEWS_LIST_PRESENTER", "Desire news: $desiredNews")
         return desiredNews ?: throw IllegalArgumentException()
     }
     
@@ -74,8 +74,8 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
             val partNews = item.value.subList(0, 10)
             news.addAll(partNews)
         }
-        news.shuffle()
-        newsList = news
+
+        newsList = news.sortedWith(compareBy { it.releaseDate }) as MutableList<NewsFeed>
         currentState()
     }
 
@@ -86,7 +86,6 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
     }
 
     override fun failedNews() {
-        // TODO("Not yet implemented")
         Log.i("NEWS_LIST", "Not ok get data: ${model.requestData}")
     }
 
@@ -94,7 +93,6 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
         when (operationCode) {
             CodeOperationModelDB.CHECK_IF_FAVORITE -> println("Contains in Favorite")
             CodeOperationModelDB.SAVE -> {
-                Log.i("NEWS_LIST_PRESENTER", "Save news")
                 viewNews?.drawNewsList(newsList)
             }
         }

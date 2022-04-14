@@ -47,7 +47,7 @@ class FavoriteAdapter(
                 )
             } else {
                 clickNews.onClickNews(
-                    (p0 as AppCompatTextView).text as String
+                    binding.titleNews.text as String
                 )
             }
         }
@@ -74,6 +74,6 @@ class FavoriteAdapter(
 }
 
 interface ClickFavoriteNews {
-    fun onClickNews(name: String)
-    fun onClickFavorite(name: String)
+    fun onClickNews(title: String)
+    fun onClickFavorite(title: String)
 }

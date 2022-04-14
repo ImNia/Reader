@@ -1,7 +1,6 @@
 package com.delirium.reader.favorite
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.delirium.reader.R
 import com.delirium.reader.databinding.FragmentFavoriteBinding
-import com.delirium.reader.databinding.NewsListBinding
 import com.delirium.reader.model.NewsFeed
-import com.delirium.reader.news.NewsAdapter
-import com.delirium.reader.news.NewsListPresenter
 
 class FavoriteFragment : Fragment(), ClickFavoriteNews {
     private lateinit var favoriteAdapter: FavoriteAdapter
@@ -68,11 +63,22 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
         bindingNews.goToFilms.visibility = View.VISIBLE
     }
 
-    override fun onClickNews(name: String) {
-        Log.i("FAVORITE_ADAPTER", "click on $name")
+    fun selectNewsForReading(news: NewsFeed) {
+        bindingNews.root.findNavController().navigate(
+            FavoriteFragmentDirections.actionFavoriteFragmentToNewsReading(
+                news.link ?: "ERROR",
+                news.source
+                    ?.substringAfter("//")
+                    ?.substringBefore("/") ?: "???"
+            )
+        )
     }
 
-    override fun onClickFavorite(name: String) {
-        favoritePresenter.deleteNews(name)
+    override fun onClickNews(title: String) {
+        favoritePresenter.selectNewsFromList(title)
+    }
+
+    override fun onClickFavorite(title: String) {
+        favoritePresenter.deleteNews(title)
     }
 }

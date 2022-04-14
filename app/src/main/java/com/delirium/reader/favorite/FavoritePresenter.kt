@@ -40,6 +40,11 @@ class FavoritePresenter : ViewModel(), CallbackModelDB {
         currentState()
     }
 
+    fun selectNewsFromList(title: String) {
+        val desiredNews = findNewsInList(title)
+        viewFavorite?.selectNewsForReading(desiredNews)
+    }
+
     private fun findNewsInList(name: String) : NewsFeed {
         var desiredNews: NewsFeed? = null
 
@@ -48,7 +53,6 @@ class FavoritePresenter : ViewModel(), CallbackModelDB {
                 desiredNews = newsFeed
         }
 
-//        Log.i("NEWS_LIST_PRESENTER", "Desire news: $desiredNews")
         return desiredNews ?: throw IllegalArgumentException()
     }
 
