@@ -2,6 +2,7 @@
     <string name="app_name">Reader</string>
     <string name="news_list_label">Новости</string>
     <string name="favorite_label">Избранное</string>
+    <string name="filter_label">Фильтр</string>
 
     <string name="not_news_favorite">Пока нет новостей</string>
     <string name="go_to_news_list">Перейти к новостям</string>

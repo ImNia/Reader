@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_newsList_to_newsReading"
             app:destination="@id/newsReading" />
+        <action
+            android:id="@+id/action_newsList_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
     </fragment>
 
     <fragment
