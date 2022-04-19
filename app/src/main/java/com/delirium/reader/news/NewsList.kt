@@ -41,12 +41,16 @@ class NewsList : Fragment(), NewsListener {
 
         val menuFavorite = toolBar?.menu?.findItem(R.id.favorite)
         menuFavorite?.isVisible = true
+        val menuFilter = toolBar?.menu?.findItem(R.id.filter)
+        menuFilter?.isVisible = true
 
         toolBar?.setOnMenuItemClickListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.favorite -> {
                     bindingNews.root.findNavController().navigate(
-                        NewsListDirections.actionNewsListToFavoriteFragment()
+                        NewsListDirections.actionNewsListToFavoriteFragment(
+                            sourceList.toTypedArray()
+                        )
                     )
                     true
                 }
@@ -124,7 +128,6 @@ class NewsList : Fragment(), NewsListener {
     }
 
     private fun filterNews(source: String) {
-        Log.i("NEWS_LIST", "in filterNews function: $source")
         newsListPresenter.filterNews(source)
     }
 }

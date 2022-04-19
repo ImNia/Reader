@@ -74,7 +74,6 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
             news.addAll(partNews)
         }
 
-        //TODO sort desc
         newsList = news.sortedWith(compareByDescending { it.releaseDate }) as MutableList<NewsFeed>
         currentState()
     }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.navigation.fragment.navArgs
 import com.delirium.reader.R
+import com.google.android.material.appbar.MaterialToolbar
 
 class NewsReading : Fragment() {
     private val args by navArgs<NewsReadingArgs>()
@@ -18,15 +19,21 @@ class NewsReading : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
+        val toolbar: MaterialToolbar? = activity?.findViewById(R.id.toolBar)
+        val menuFilter = toolbar?.menu?.findItem(R.id.filter)
+        menuFilter?.isVisible = false
+        val menuFavorite = toolbar?.menu?.findItem(R.id.favorite)
+        menuFavorite?.isVisible = false
 
-        val rootView = inflater.inflate(R.layout.news_reading, container, false)
+        val bindingView = inflater.inflate(R.layout.news_reading, container, false)
 
-        webView = rootView.findViewById(R.id.newsWebView)
+        webView = bindingView.findViewById(R.id.newsWebView)
         webView.webViewClient = NewsWebViewClient()
         webView.settings.javaScriptEnabled
 
         webView.loadUrl(linkNews)
 
-        return rootView
+        return bindingView
     }
 }

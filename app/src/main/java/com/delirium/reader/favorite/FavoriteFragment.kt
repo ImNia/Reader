@@ -3,12 +3,14 @@ package com.delirium.reader.favorite
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +27,9 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
     private lateinit var linearManager: LinearLayoutManager
     private val favoritePresenter: FavoritePresenter by activityViewModels()
 
+    private val args by navArgs<FavoriteFragmentArgs>()
+    private val sourceList by lazy { args.sourceList.toList() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,10 +40,13 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
         val menuFavorite = toolBar?.menu?.findItem(R.id.favorite)
         menuFavorite?.isVisible = false
 
+        val menuFilter = toolBar?.menu?.findItem(R.id.filter)
+        menuFilter?.isVisible = true
+
         toolBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.filter -> {
-                    Log.i("MENU", "Click on filter in Favorite")
+                    clickOnFilter(activity?.findViewById(R.id.filter))
                     true
                 }
                 else -> {
@@ -97,6 +105,35 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
         )
     }
 
+    private fun clickOnFilter(viewForMenu: View?) {
+        val popMenu = PopupMenu(activity, viewForMenu)
+        popMenu.menu.add(getString(R.string.all_news_menu))
+        for (newsSource in sourceList) {
+            popMenu.menu.add(newsSource.name)
+        }
+
+        val menuInflater = popMenu.menuInflater
+        menuInflater.inflate(R.menu.popup_menu_source, popMenu.menu)
+        popMenu.show()
+
+        popMenu.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.title == getString(R.string.all_news_menu)) {
+                filterNews(menuItem.title.toString())
+            }
+            sourceList.forEach { source ->
+                if (menuItem.title == source.name) {
+                    filterNews(source.name)
+                    return@setOnMenuItemClickListener true
+                }
+            }
+            false
+        }
+    }
+
+    private fun filterNews(source: String) {
+        favoritePresenter.filterNews(source)
+    }
+
     override fun onClickNews(title: String) {
         favoritePresenter.selectNewsFromList(title)
     }
@@ -111,7 +148,6 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.i("FAVORITE", "In function onOptionItemSelected")
         NavigationUI.onNavDestinationSelected(item, findNavController())
         return when (item.itemId) {
             R.id.favorite -> {

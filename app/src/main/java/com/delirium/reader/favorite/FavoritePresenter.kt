@@ -56,6 +56,24 @@ class FavoritePresenter : ViewModel(), CallbackModelDB {
         return desiredNews ?: throw IllegalArgumentException()
     }
 
+    fun filterNews(source: String) {
+        when(source.lowercase()) {
+            //TODO in String
+            "all source" -> {
+                currentState()
+            }
+            else -> {
+                val newsSet : MutableList<NewsFeed> = mutableListOf()
+                for (item in newsList) {
+                    if (item.source?.contains(source.lowercase()) == true) {
+                        newsSet.add(item)
+                    }
+                }
+                viewFavorite?.drawNewsList(newsSet)
+            }
+        }
+    }
+
     override fun successfulModelDB(operationCode: CodeOperationModelDB, data: List<NewsFeed>) {
         when (operationCode) {
             CodeOperationModelDB.CHECK_IF_FAVORITE -> println("Contains in Favorite")
