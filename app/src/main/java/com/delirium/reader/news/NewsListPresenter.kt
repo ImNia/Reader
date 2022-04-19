@@ -10,7 +10,6 @@ import com.delirium.reader.model.CodeOperationModelDB
 import com.delirium.reader.model.ModelDB
 import com.delirium.reader.sources.Source
 import java.lang.IllegalArgumentException
-import java.util.*
 import kotlin.collections.HashMap
 
 class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
@@ -52,15 +51,15 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
     
     private fun findNewsInList(title: String, source: String) : NewsFeed {
         var desiredNews: NewsFeed? = null
-        var titleForSource = newsFromAllResource.get(source)
+        var newsSetBySource : List<NewsFeed> = listOf()
 
         for (item in newsFromAllResource) {
             if (item.key.contains(source)) {
-                titleForSource = item.value
+                newsSetBySource = item.value
             }
         }
 
-        titleForSource?.forEach { newsFeed ->
+        newsSetBySource.forEach { newsFeed ->
             if(newsFeed.title == title)
                 desiredNews = newsFeed
         }
@@ -75,8 +74,28 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
             news.addAll(partNews)
         }
 
-        newsList = news.sortedWith(compareBy { it.releaseDate }) as MutableList<NewsFeed>
+        //TODO sort desc
+        newsList = news.sortedWith(compareByDescending { it.releaseDate }) as MutableList<NewsFeed>
         currentState()
+    }
+
+    fun filterNews(source: String) {
+        when(source.lowercase()) {
+            //TODO in String
+            "all source" -> {
+                setNewsForDraw()
+            }
+            else -> {
+                var newsSet : List<NewsFeed> = listOf()
+                for (item in newsFromAllResource) {
+                    if (item.key.contains(source.lowercase())) {
+                        newsSet = item.value
+                    }
+                }
+                newsList = newsSet as MutableList<NewsFeed>
+                currentState()
+            }
+        }
     }
 
     override fun successfulNews(source: String, news: MutableList<NewsFeed>) {

@@ -100,26 +100,31 @@ class NewsList : Fragment(), NewsListener {
 
     private fun clickOnFilter(viewForMenu: View?) {
         val popMenu = PopupMenu(activity, viewForMenu)
+        popMenu.menu.add(getString(R.string.all_news_menu))
+        for (newsSource in sourceList) {
+            popMenu.menu.add(newsSource.name)
+        }
+
         val menuInflater = popMenu.menuInflater
         menuInflater.inflate(R.menu.popup_menu_source, popMenu.menu)
         popMenu.show()
 
         popMenu.setOnMenuItemClickListener { menuItem ->
-            when(menuItem.itemId) {
-                R.id.lenta_menu -> {
-                    Log.i("NEWS_LIST", "Click lenta_menu")
-                    true
-                }
-                R.id.habr_menu -> {
-                    Log.i("NEWS_LIST", "Click habr_menu")
-                    true
-                }
-                R.id.phoronix_menu -> {
-                    Log.i("NEWS_LIST", "Click phoronix_menu")
-                    true
-                }
-                else -> false
+            if (menuItem.title == getString(R.string.all_news_menu)) {
+                filterNews(menuItem.title.toString())
             }
+            sourceList.forEach { source ->
+                if (menuItem.title == source.name) {
+                    filterNews(source.name)
+                    return@setOnMenuItemClickListener true
+                }
+            }
+            false
         }
+    }
+
+    private fun filterNews(source: String) {
+        Log.i("NEWS_LIST", "in filterNews function: $source")
+        newsListPresenter.filterNews(source)
     }
 }

@@ -7,4 +7,7 @@
     <string name="not_news_favorite">Пока нет новостей</string>
     <string name="go_to_news_list">Перейти к новостям</string>
     <string name="content_description_favorite">Избранное</string>
+
+
+    <string name="all_news_menu">All source</string>
 </resources>

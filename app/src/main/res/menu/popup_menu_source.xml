@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
     <group
         android:id="@+id/popup_menu_group">
-        <item
-            android:id="@+id/lenta_menu"
-            android:title="Lenta"
-            app:showAsAction="ifRoom|withText" />
-        <item
-            android:id="@+id/habr_menu"
-            android:title="Habr"
-            app:showAsAction="ifRoom|withText"
-            />
-        <item
-            android:id="@+id/phoronix_menu"
-            android:title="Phoronix"
-            app:showAsAction="ifRoom|withText"
-            />
     </group>
 </menu>
