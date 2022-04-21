@@ -8,6 +8,15 @@
     <string name="go_to_news_list">Перейти к новостям</string>
     <string name="content_description_favorite">Избранное</string>
 
+    <string name="title_description">Описание</string>
 
     <string name="all_news_menu">All source</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="not_found_error">Новость не найдена</string>
+    <string name="not_found_link_error">Ошибка с открытием новости</string>
+    <string name="data_not_load">Ошибка подключения сети</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="request_timeout_error">Медленное соединение</string>
+    <string name="conflict_value_error">Не удалось распознать ответ от сервер</string>
+    <string name="ok">Понятно</string>
 </resources>

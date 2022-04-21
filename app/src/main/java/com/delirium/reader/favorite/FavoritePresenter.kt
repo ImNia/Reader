@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.delirium.reader.CallbackModelDB
 import com.delirium.reader.model.CodeOperationModelDB
+import com.delirium.reader.model.StatusCode
 import com.delirium.reader.model.ModelDB
 import com.delirium.reader.model.NewsFeed
-import java.lang.IllegalArgumentException
 
 class FavoritePresenter : ViewModel(), CallbackModelDB {
     private var viewFavorite: FavoriteFragment? = null
@@ -36,16 +36,20 @@ class FavoritePresenter : ViewModel(), CallbackModelDB {
 
     fun deleteNews(name: String) {
         val newsForDelete = findNewsInList(name)
-        modelDB.deleteNewsInFavorite(newsForDelete)
+        newsForDelete?.let {
+            modelDB.deleteNewsInFavorite(it)
+        } ?: viewFavorite?.showSnackBar(StatusCode.NEWS_NOT_FOUND)
         currentState()
     }
 
     fun selectNewsFromList(title: String) {
         val desiredNews = findNewsInList(title)
-        viewFavorite?.selectNewsForReading(desiredNews)
+        desiredNews?.let {
+            viewFavorite?.selectNewsForReading(it)
+        } ?: viewFavorite?.showSnackBar(StatusCode.NEWS_NOT_FOUND)
     }
 
-    private fun findNewsInList(name: String) : NewsFeed {
+    private fun findNewsInList(name: String) : NewsFeed? {
         var desiredNews: NewsFeed? = null
 
         newsList.forEach { newsFeed ->
@@ -53,7 +57,7 @@ class FavoritePresenter : ViewModel(), CallbackModelDB {
                 desiredNews = newsFeed
         }
 
-        return desiredNews ?: throw IllegalArgumentException()
+        return desiredNews
     }
 
     fun filterNews(source: String) {
@@ -84,8 +88,7 @@ class FavoritePresenter : ViewModel(), CallbackModelDB {
         }
     }
 
-    override fun failedModelDB() {
-        //TODO("Not yet implemented")
-        Log.i("FAVORITE_PRESENTER", "modelDB have a problem")
+    override fun failedModelDB(statusCode: StatusCode) {
+        viewFavorite?.showSnackBar(statusCode)
     }
 }

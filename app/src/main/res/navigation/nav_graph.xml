@@ -25,7 +25,7 @@
         tools:layout="@layout/fragment_favorite">
         <argument
             android:name="sourceList"
-            app:argType="com.delirium.reader.sources.Source[]"
+            app:argType="com.delirium.reader.model.Source[]"
             />
         <action
             android:id="@+id/action_favoriteFragment_to_newsReading"

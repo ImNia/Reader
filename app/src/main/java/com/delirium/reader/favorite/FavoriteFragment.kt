@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
@@ -16,8 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.delirium.reader.R
 import com.delirium.reader.databinding.FragmentFavoriteBinding
+import com.delirium.reader.model.StatusCode
 import com.delirium.reader.model.NewsFeed
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.snackbar.Snackbar
 
 class FavoriteFragment : Fragment(), ClickFavoriteNews {
     private lateinit var favoriteAdapter: FavoriteAdapter
@@ -29,6 +29,8 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
 
     private val args by navArgs<FavoriteFragmentArgs>()
     private val sourceList by lazy { args.sourceList.toList() }
+
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,14 +97,17 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
     }
 
     fun selectNewsForReading(news: NewsFeed) {
-        bindingNews.root.findNavController().navigate(
-            FavoriteFragmentDirections.actionFavoriteFragmentToNewsReading(
-                news.link ?: "ERROR",
-                news.source
-                    ?.substringAfter("//")
-                    ?.substringBefore("/") ?: "???"
+        news.link?.let { link ->
+            bindingNews.root.findNavController().navigate(
+                FavoriteFragmentDirections.actionFavoriteFragmentToNewsReading(
+                    link,
+                    news.source
+                        ?.substringAfter("//")
+                        ?.substringBefore("/")
+                        ?: getString(R.string.title_description)
+                )
             )
-        )
+        } ?: showSnackBar(StatusCode.LINK_NOT_FOUND)
     }
 
     private fun clickOnFilter(viewForMenu: View?) {
@@ -132,6 +137,25 @@ class FavoriteFragment : Fragment(), ClickFavoriteNews {
 
     private fun filterNews(source: String) {
         favoritePresenter.filterNews(source)
+    }
+
+    fun showSnackBar(statusCode: StatusCode? = null) {
+        val textError = when(statusCode) {
+            StatusCode.NEWS_NOT_FOUND,
+            StatusCode.NOT_FOUND -> getString(R.string.not_found_error)
+            StatusCode.LINK_NOT_FOUND -> getString(R.string.not_found_link_error)
+            StatusCode.CONFLICT_VALUE -> getString(R.string.conflict_value_error)
+            StatusCode.NOT_CONNECT -> getString(R.string.data_not_load)
+            StatusCode.REQUEST_TIMEOUT -> getString(R.string.request_timeout_error)
+            else -> getString(R.string.unknown_error)
+        }
+
+        snackBar = Snackbar
+            .make(bindingNews.recyclerFavorite, textError, Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.ok)) {
+                snackBar?.dismiss()
+            }
+        snackBar?.show()
     }
 
     override fun onClickNews(title: String) {

@@ -1,7 +1,6 @@
 package com.delirium.reader.news
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
@@ -12,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.delirium.reader.R
 import com.delirium.reader.databinding.NewsListBinding
 import com.delirium.reader.model.NewsFeed
-import com.delirium.reader.sources.Source
+import com.delirium.reader.model.StatusCode
+import com.delirium.reader.model.Source
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.snackbar.Snackbar
 
 class NewsList : Fragment(), NewsListener {
     private lateinit var newsAdapter: NewsAdapter
@@ -29,6 +30,8 @@ class NewsList : Fragment(), NewsListener {
     private var recyclerView: RecyclerView? = null
     private lateinit var linearManager: LinearLayoutManager
     private val newsListPresenter: NewsListPresenter by activityViewModels()
+
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,15 +86,37 @@ class NewsList : Fragment(), NewsListener {
         newsAdapter.notifyDataSetChanged()
     }
 
-    fun selectedNewsTitle(title: NewsFeed) {
-        bindingNews.root.findNavController().navigate(
-            NewsListDirections.actionNewsListToNewsReading(
-                title.link ?: "ERROR",
-                title.source
-                    ?.substringAfter("//")
-                    ?.substringBefore("/") ?: "???"
+    fun selectedNewsTitle(news: NewsFeed) {
+        news.link?.let { link ->
+            bindingNews.root.findNavController().navigate(
+                NewsListDirections.actionNewsListToNewsReading(
+                    link,
+                    news.source
+                        ?.substringAfter("//")
+                        ?.substringBefore("/")
+                        ?: getString(R.string.title_description)
+                )
             )
-        )
+        } ?: showSnackBar(StatusCode.NEWS_NOT_FOUND)
+    }
+
+    fun showSnackBar(statusCode: StatusCode? = null) {
+        val textError = when(statusCode) {
+            StatusCode.NEWS_NOT_FOUND,
+            StatusCode.NOT_FOUND -> getString(R.string.not_found_error)
+            StatusCode.LINK_NOT_FOUND -> getString(R.string.not_found_link_error)
+            StatusCode.CONFLICT_VALUE -> getString(R.string.conflict_value_error)
+            StatusCode.NOT_CONNECT -> getString(R.string.data_not_load)
+            StatusCode.REQUEST_TIMEOUT -> getString(R.string.request_timeout_error)
+            else -> getString(R.string.unknown_error)
+        }
+
+        snackBar = Snackbar
+            .make(bindingNews.recyclerNewsList, textError, Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.ok)) {
+                snackBar?.dismiss()
+            }
+        snackBar?.show()
     }
 
     override fun onClickNewsTitle(title: String, source: String) {

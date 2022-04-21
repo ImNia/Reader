@@ -7,6 +7,8 @@ import org.jsoup.nodes.TextNode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class Model(val callback: CallbackNews) {
     private lateinit var newsRequest: NewsRequest
@@ -16,7 +18,15 @@ class Model(val callback: CallbackNews) {
         newsRequest = SettingConnect.getNewsRequest(urlNews)
         newsRequest.newsFeed().enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
-                callback.failedNews()
+                when (t) {
+                    is SocketTimeoutException ->
+                        callback.failedNews(StatusCode.REQUEST_TIMEOUT)
+                    is NumberFormatException ->
+                        callback.failedNews(StatusCode.CONFLICT_VALUE)
+                    is UnknownHostException ->
+                        callback.failedNews(StatusCode.NOT_CONNECT)
+                    else -> callback.failedNews(StatusCode.SOME_ERROR)
+                }
                 t.printStackTrace()
             }
 
@@ -28,7 +38,7 @@ class Model(val callback: CallbackNews) {
                     requestData = parseReceiveNews(response.body(), urlNews)
                     callback.successfulNews(urlNews, requestData)
                 } else {
-                    callback.failedNews()
+                    callback.failedNews(StatusCode.NOT_FOUND)
                 }
             }
         })

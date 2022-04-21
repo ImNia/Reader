@@ -1,4 +1,4 @@
-package com.delirium.reader.sources
+package com.delirium.reader.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

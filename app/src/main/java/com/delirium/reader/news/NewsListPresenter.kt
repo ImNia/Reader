@@ -4,12 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.delirium.reader.CallbackModelDB
 import com.delirium.reader.CallbackNews
-import com.delirium.reader.model.Model
-import com.delirium.reader.model.NewsFeed
-import com.delirium.reader.model.CodeOperationModelDB
-import com.delirium.reader.model.ModelDB
-import com.delirium.reader.sources.Source
-import java.lang.IllegalArgumentException
+import com.delirium.reader.model.*
+import com.delirium.reader.model.Source
 import kotlin.collections.HashMap
 
 class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
@@ -35,21 +31,25 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
 
     fun selectNewsTitle(title: String, source: String) {
         val desiredNews = findNewsInList(title, source)
-        viewNews?.selectedNewsTitle(desiredNews)
+        desiredNews?.let { news ->
+            viewNews?.selectedNewsTitle(news)
+        }
     }
 
     fun selectFavoriteNews(title: String, source: String) {
         val desiredNews = findNewsInList(title, source)
-        when (desiredNews.isFavorite) {
-            true -> modelDB.deleteNewsInFavorite(desiredNews)
-            false -> {
-                desiredNews.isFavorite = true
-                modelDB.saveNewsToFavorite(desiredNews)
+        desiredNews?.let { news ->
+            when (news.isFavorite) {
+                true -> modelDB.deleteNewsInFavorite(news)
+                false -> {
+                    news.isFavorite = true
+                    modelDB.saveNewsToFavorite(news)
+                }
             }
         }
     }
     
-    private fun findNewsInList(title: String, source: String) : NewsFeed {
+    private fun findNewsInList(title: String, source: String) : NewsFeed? {
         var desiredNews: NewsFeed? = null
         var newsSetBySource : List<NewsFeed> = listOf()
 
@@ -64,7 +64,7 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
                 desiredNews = newsFeed
         }
 
-        return desiredNews ?: throw IllegalArgumentException()
+        return desiredNews
     }
     
     private fun setNewsForDraw() {
@@ -103,8 +103,8 @@ class NewsListPresenter : ViewModel(), CallbackNews, CallbackModelDB {
         setNewsForDraw()
     }
 
-    override fun failedNews() {
-        Log.i("NEWS_LIST", "Not ok get data: ${model.requestData}")
+    override fun failedNews(statusCode: StatusCode) {
+        viewNews?.showSnackBar(statusCode)
     }
 
     override fun successfulModelDB(operationCode: CodeOperationModelDB, data: List<NewsFeed>) {
